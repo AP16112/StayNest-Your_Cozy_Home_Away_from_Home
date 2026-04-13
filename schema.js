@@ -32,6 +32,7 @@ module.exports.listingSchema = Joi.object({
         description: Joi.string().required(),
         location: Joi.string().required(),
         country: Joi.string().required(),
+        category: Joi.string().required(),
         price: Joi.number().required().min(0),    // so price can't be -ve number
         // SO here this image doesn't needs to be required 
         // .allow("", null) → By default, Joi would reject empty strings or null values. But this tells Joi: “It’s okay if image is either an empty string ("") or null.”

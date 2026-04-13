@@ -75,6 +75,18 @@
                 <div class="invalid-feedback">Price should be valid</div>
             </div>
 
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select name="listing[category]" class="form-select" id="category" required>
+                    <% for(let category of listingCategories) { %>
+                        <option value="<%= category %>" <%= listing.category === category ? "selected" : "" %>>
+                            <%= category.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()) %>
+                        </option>
+                    <% } %>
+                </select>
+                <div class="invalid-feedback">Please select a category</div>
+            </div>
+
             <div class="row">
                 <div class="mb-3 col-md-4">
                     <label for="country"  class="form-label">Country</label>

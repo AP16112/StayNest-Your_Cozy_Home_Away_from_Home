@@ -1,6 +1,7 @@
 // here this is the controller file for listings, so here we will write all the logic related to listings in this file, so that our route file will be clean and we will just call the functions which are present in this controller file in our route file, so that our route file will be clean and easy to read and also easy to maintain. 
 
 const Listing = require("../models/listing.js");  // here we can also write like this, but generally we write like this only because it is a standard way to write it, so it is better to write like this only
+const { listingCategories } = require("../models/listing.js");
 // As we know that for this Model, by-default mongoose will create a collection called as 'listings' for this model
 
 // Geocoding :-
@@ -17,27 +18,64 @@ const mapToken = process.env.MAP_TOKEN;
 // Here we are strating this geocoding service by passing the access token to it, so that we can use this geocoding service to convert the location entered by the user in the form of address into geographic coordinates (latitude and longitude) and then we can store those coordinates in our database to show the location of that listing on the map in the show page of that listing.
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
+const filters = [
+    { label: "Trending", value: "trending", icon: "fa-solid fa-fire" },
+    { label: "Rooms", value: "rooms", icon: "fa-solid fa-bed" },
+    { label: "Iconic Cities", value: "iconic-cities", icon: "fa-solid fa-mountain-city" },
+    { label: "Mountains", value: "mountains", icon: "fa-solid fa-mountain" },
+    { label: "Castles", value: "castles", icon: "fa-brands fa-fort-awesome" },
+    { label: "Amazing Pools", value: "amazing-pools", icon: "fa-solid fa-person-swimming" },
+    { label: "Camping", value: "camping", icon: "fa-solid fa-campground" },
+    { label: "Farms", value: "farms", icon: "fa-solid fa-cow" },
+    { label: "Arctic", value: "arctic", icon: "fa-regular fa-snowflake" },
+    { label: "Domes", value: "domes", icon: "fa-solid fa-igloo" },
+    { label: "Boats", value: "boats", icon: "fa-solid fa-sailboat" },
+];
+
 
 // so here this 'index' function is a asynchronous fn which is used to render all the listings present in the database on the index page of listings, so here we will write the logic to find all the listings from the database and then render those listings on the index page of listings here in this 'index' function here, so that we can call this 'index' function in our route file to render all the listings on the index page of listings.
 module.exports.index = async (req, res) => {
+    let { category, search } = req.query;
+    let query = {};
+    let searchQuery = search ? search.trim() : "";
+
+    if(category && listingCategories.includes(category)) {
+        query.category = category;
+    } else {
+        category = "";
+    }
+
+    if(searchQuery) {
+        query.$or = [
+            { title: { $regex: searchQuery, $options: "i" } },
+            { location: { $regex: searchQuery, $options: "i" } },
+            { country: { $regex: searchQuery, $options: "i" } },
+        ];
+    }
+
     // To find all documents i.e listings here in the 'listings' collection, we can use an empty query object like this :-
     // Now here if we want we can use .then() & .catch() method to handle the promise returned by this .find() method of mongoose, but here we will use async-await way to handle this promise because it is more cleaner way to handle the asynchronous processes than using .then() & .catch() method, so we will use async-await way to handle this promise here.
     // So as we know that this .find() method of mongoose is asynchronous, so it will return a promise, so we will handle this promise using async-await way here.
     // So here we will use this way to handle this promise using async-await way :-
     // As this arrow function is not an async function, so we will make this arrow function as an async function by using this 'async' keyword before this arrow function like this :- app.get("/listings", async (req, res) => { ... })
-    let allListings = await Listing.find({});
+    let allListings = await Listing.find(query);
     
     console.log(allListings);
 
     // here we need to use this i.e 'listings/index.ejs' because here index.ejs is present inside the listings folder which present inside views folder and we only set the path till views folder only
-    res.render("listings/index.ejs", { allListings });
+    res.render("listings/index.ejs", {
+        allListings,
+        filters,
+        selectedCategory: category,
+        searchQuery,
+    });
 };
 
 
 // So here this 'renderNewForm' function is used to render the form for creating new listing, so here we will write the logic to render the form for creating new listing here in this 'renderNewForm' function here, so that we can call this 'renderNewForm' function in our route file to render the form for creating new listing.
 module.exports.renderNewForm = (req, res) => {
     // here we need to use this i.e 'listings/new.ejs' because here new.ejs is present inside the listings folder which present inside views folder and we only set the path till views folder only
-    res.render("listings/new.ejs");
+    res.render("listings/new.ejs", { listingCategories });
 }
 
 // So here this 'showListing' function is used to render the show page of a listing, so here we will write the logic to find the listing based on the id from the database and then render that listing on the show page of that listing here in this 'showListing' function here, so that we can call this 'showListing' function in our route file to render the show page of that listing.
@@ -188,7 +226,7 @@ module.exports.renderEditForm = async (req, res) => {
         originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_250,e_blur:50");
 
         // here we need to use this i.e 'listings/show.ejs' because here show.ejs is present inside the listings folder which present inside views folder and we only set the path till views folder only
-        res.render("listings/edit.ejs", {listing, originalImageUrl});
+        res.render("listings/edit.ejs", {listing, originalImageUrl, listingCategories});
     }
 };
 

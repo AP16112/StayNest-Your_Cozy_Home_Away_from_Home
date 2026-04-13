@@ -307,6 +307,7 @@ app.use((req, res, next) => {
     // console.log(res.locals.successMsg);
 
     res.locals.currentUser = req.user;   // here this 'currentUser' is the variable which we are defining to store the value of req.user in it, so that we can easily access this currentUser variable in our ejs files without passing it in the render method of each route, so that we can easily access the details of currently logged in user in our ejs files using this currentUser variable.
+    res.locals.searchQuery = req.query.search || "";
     // here this 'currentUser' is the variable which we are defining to store the value of req.user in it, so that we can easily access this currentUser variable in our ejs files without passing it in the render method of each route, so that we can easily access the details of currently logged in user in our ejs files using this currentUser variable.
     // So now we can easily access the details of currently logged in user in our ejs files using this currentUser variable like this :- <%= currentUser.username %> or <%= currentUser.email %> etc.
 
@@ -390,6 +391,14 @@ app.use("/listings/:id/reviews", reviewRouter);
 
 
 app.use("/", userRouter);
+
+app.get("/privacy", (req, res) => {
+    res.render("privacy.ejs");
+});
+
+app.get("/terms", (req, res) => {
+    res.render("terms.ejs");
+});
 // Now here this 'userRouter' actually representing the router object having all the routes like router.get() or router.post() or etc.
 // So now all the paths in router user.js file, will starts after the '/'   
 // here this '/' is parent route & all the route that will be present after this in user.js  router.get() or router.post() will be child route.

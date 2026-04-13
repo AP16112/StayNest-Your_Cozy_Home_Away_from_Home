@@ -59,6 +59,17 @@
                 <!-- The class invalid-feedback tells Bootstrap: “Show this message when the associated input field is invalid.” It’s linked to the input element just above it (for example, a price field). -->
                 <!-- When the form is submitted and the field fails validation (empty, wrong format, etc.), Bootstrap will display this message in red below the input. If the field passes validation, this message stays hidden. -->
             </div>
+
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select name="listing[category]" class="form-select" id="category" required>
+                    <option value="">Select a category</option>
+                    <% for(let category of listingCategories) { %>
+                        <option value="<%= category %>"><%= category.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()) %></option>
+                    <% } %>
+                </select>
+                <div class="invalid-feedback">Please select a category</div>
+            </div>
         
             <div class="row">
                 <div class="mb-3 col-md-4">
