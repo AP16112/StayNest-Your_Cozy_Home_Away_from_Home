@@ -6,6 +6,14 @@ StayNest is a polished vacation rental web application built with Node.js and Ex
 
 - Render deployment: https://staynest-your-cozy-home-away-from-home.onrender.com/listings
 
+### Screenshots from the live demo
+
+![StayNest Listings Page](README-listings.png)
+
+![StayNest Listing Detail Page](README-listing-detail.png)
+
+![StayNest Create Listing Page](README-new-listing.png)
+
 ## Key Features
 
 - User authentication and registration with Passport.js and `passport-local-mongoose`
