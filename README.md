@@ -1,6 +1,8 @@
-# StayNest — Your Cozy Home Away from Home
+# StayNest - Your Cozy Home Away from Home
 
-StayNest is a polished vacation rental web application built with Node.js and Express. It uses server-rendered EJS views along with HTML, CSS, and client-side JavaScript to deliver a responsive user experience. The project stores listing and user data in MongoDB Atlas and uploads media assets to Cloudinary, while authenticated hosts can manage property listings and guests can browse, review, and interact with individual listings.
+StayNest is a full-stack vacation rental platform designed to make discovering and sharing stays feel simple, reliable, and welcoming. Inspired by modern homestay marketplaces, it allows users to browse property listings, explore listing details, upload property images, leave reviews, and manage their own listings through a secure authentication flow.
+
+From a technical perspective, the application is built with Node.js, Express.js, EJS, and MongoDB Atlas, with Mongoose handling database modeling and relationships. It uses Passport.js for authentication, `express-session` with `connect-mongo` for persistent session management, Cloudinary with Multer for image uploads, Joi for server-side validation, and Mapbox for geocoding and interactive map-based location display.
 
 ## Live Demo
 
@@ -39,15 +41,15 @@ StayNest is a polished vacation rental web application built with Node.js and Ex
 
 ## Repository Structure
 
-- `app.js` — primary Express application bootstrap and middleware setup
-- `cloudConfig.js` — Cloudinary SDK setup and storage engine
-- `routes/` — route definitions for listings, reviews, and users
-- `controllers/` — handler functions for routes and business logic
-- `models/` — Mongoose schemas for listings, reviews, and users
-- `views/` — EJS templates, layouts, and partials
-- `public/` — static assets including CSS and frontend JS
-- `utils/` — reusable middleware helpers and error wrappers
-- `schema.js` — Joi schemas for validating listing and review payloads
+- `app.js` - primary Express application bootstrap and middleware setup
+- `cloudConfig.js` - Cloudinary SDK setup and storage engine
+- `routes/` - route definitions for listings, reviews, and users
+- `controllers/` - handler functions for routes and business logic
+- `models/` - Mongoose schemas for listings, reviews, and users
+- `views/` - EJS templates, layouts, and partials
+- `public/` - static assets including CSS and frontend JS
+- `utils/` - reusable middleware helpers and error wrappers
+- `schema.js` - Joi schemas for validating listing and review payloads
 
 ## Environment Configuration
 
@@ -64,10 +66,10 @@ NODE_ENV=development
 
 ### Recommended values
 
-- `ATLASDB_URL` — MongoDB connection string (Atlas or local)
-- `SECRET` — secure session secret for cookies
-- `CLOUD_NAME`, `CLOUD_API_KEY`, `CLOUD_API_SECRET` — Cloudinary credentials for uploads
-- `NODE_ENV` — typically `development` or `production`
+- `ATLASDB_URL` - MongoDB connection string (Atlas or local)
+- `SECRET` - secure session secret for cookies
+- `CLOUD_NAME`, `CLOUD_API_KEY`, `CLOUD_API_SECRET` - Cloudinary credentials for uploads
+- `NODE_ENV` - typically `development` or `production`
 
 ## Installation
 
@@ -107,26 +109,26 @@ This project has been deployed to Render. The production endpoint is:
 
 ### Listings
 
-- `GET /listings` — fetch all listings
-- `GET /listings/new` — show new listing form
-- `POST /listings` — add a new listing with image upload
-- `GET /listings/:id` — view listing details
-- `GET /listings/:id/edit` — show listing edit form
-- `PUT /listings/:id` — update listing data
-- `DELETE /listings/:id` — delete a listing
+- `GET /listings` - fetch all listings
+- `GET /listings/new` - show new listing form
+- `POST /listings` - add a new listing with image upload
+- `GET /listings/:id` - view listing details
+- `GET /listings/:id/edit` - show listing edit form
+- `PUT /listings/:id` - update listing data
+- `DELETE /listings/:id` - delete a listing
 
 ### Reviews
 
-- `POST /listings/:id/reviews` — create a review for a listing
-- `DELETE /listings/:id/reviews/:reviewId` — remove a review
+- `POST /listings/:id/reviews` - create a review for a listing
+- `DELETE /listings/:id/reviews/:reviewId` - remove a review
 
 ### Authentication
 
-- `GET /signup` — sign up page
-- `POST /signup` — register new user
-- `GET /login` — login page
-- `POST /login` — authenticate user
-- `GET /logout` — end user session
+- `GET /signup` - sign up page
+- `POST /signup` - register new user
+- `GET /login` - login page
+- `POST /login` - authenticate user
+- `GET /logout` - end user session
 
 ## Application Behavior
 
@@ -140,5 +142,3 @@ This project has been deployed to Render. The production endpoint is:
 
 - This app currently uses `node app.js` to start the server, but a `start` script may be added to `package.json` for convenience.
 - Database, Cloudinary, and session secrets must be provided before launching the app.
-
-
