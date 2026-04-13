@@ -1,0 +1,145 @@
+body {
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+}
+
+/* flex: 1 Means :- 
+flex is a shorthand for three properties: flex: <flex-grow> <flex-shrink> <flex-basis>;
+SO writing flex: 1 is equivalent to :-
+flex-grow: 1 → the element will expand to take up available space in the flex container.
+flex-shrink: 1 → it can shrink if necessary when space is tight.
+flex-basis: 0% → its starting size is treated as 0, and then it grows based on available space.
+*/
+
+/* Custom Styling for Navbar */
+.navbar {
+    height: 5rem;
+    background-color: white;
+}
+
+.fa-compass {
+    color: #fe424d;
+    font-size: 2rem;
+}
+
+
+/* As here nav-link is actually the bootstrap class, so it will follow bootstrap styling, but if we want to apply custom styling, we will make use of this '!important' which will override all the other styling */
+.nav-link {
+    color: #222222 !important;
+}
+
+
+/* Custom Styling for Footer */
+.f-info-links a {
+    text-decoration: none;
+    color: #222222;
+}
+
+.f-info-links a:hover {
+    text-decoration: underline;
+}
+
+.f-info-links, .f-info-socials, .f-info-brand {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.f-info-socials i {
+    font-size: 1.3rem;
+    margin-right: 1rem;
+}
+
+.f-info-links a {
+    margin-right: 0.75rem;
+}
+
+.f-info {
+    text-align: center;
+    height: 8rem;
+    background-color: #ebebeb;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+}
+
+
+/* Custom Styling for listing cards */
+.listing-card {
+    border: none !important;
+    margin-bottom: 2rem;
+}
+
+.card-img-top {
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+/* object-fit: cover tells the browser how an image (or video) should be resized to fit its container. With cover, the image is scaled to fill the container completely, while preserving its aspect ratio.
+Parts of the image may be cropped if the aspect ratio doesn’t match the container. */
+
+.card-body {
+    padding: 0 !important;
+}
+
+.card-text p {
+    font-weight: 400 !important;
+}
+
+.listing-link {
+    text-decoration: none;
+}
+
+/* Card effect i.e Overlay Effect */
+.card-img-overlay {
+    opacity: 0;
+}
+
+.card-img-overlay:hover {
+    opacity: 0.2;      /* So now the opacity of this white background on hovering will only be 0.2*/ 
+    background-color: white;
+}
+
+
+/* Styling for New Ejs page */
+.add-btn {
+    background-color: #fe424d !important;
+    border: none !important;
+}
+
+
+/* Styling for Edit Ejs page */
+.edit-btn {
+    background-color: #fe424d !important;
+    border: none !important;
+}
+
+/* Styling for Show Ejs page */
+.show-img {
+    height: 30vh;
+}
+
+.btns {
+    display: flex;
+}
+
+.show-card {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+
+/* Styling for Maps */
+#map {
+    height: 400px;
+    width: 80vp;
+} 

@@ -1,0 +1,97 @@
+<!-- Here this is a new view or template which is used to edit the content of some existing listing-->
+
+<!-- Here we are making use of Ejs-Mate layouts, so here we are actually extending & inplementing the boilerplate.ejs code here -->
+
+<%# It tells EJS-mate: “Use the layout file located at /views/layouts/boilerplate.ejs as the base template for this page.” %>
+<%# Everything written after that <div class="row"> tag line becomes the child content that will be injected into the layout’s i.e boilerplate body placeholder. %>
+<% layout("/layouts/boilerplate") %>     <%# It is an EJS-mate directive. %>
+<div class="row mt-3">  
+    <div class="col-8 offset-2">    <%# here this 'offset-2' will adds a left margin equivalent to 2 columns. %>
+        <h3>Edit your Listing</h3>
+        <br>
+
+        <!-- The HTML Limitation :-
+            - HTML forms only support GET and POST methods.
+            - You cannot directly send a PATCH or PUT request from a <form> tag.
+        The Trick is to make use of :- _method=PUT
+        So, now This form submits a POST request to /listings/:id?_method=PUT.
+        But On the server, you use the method-override middleware:
+            const methodOverride = require("method-override");
+            app.use(methodOverride("_method"));
+        This middleware looks for a query parameter called _method.
+        - If it finds _method=PUT, it overrides the request method.
+        - So instead of treating it as a POST, Express now treats it as a PUT request.  -->
+        <!-- Here currentyl, our form can only parse the urlencoded data, so we need to use some middleware to parse the multipart/form-data which is used for file uploads. So we will use multer for that. It is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files. It makes it easy to handle file uploads in your Express applications by parsing incoming form data and storing the uploaded files in a specified location on your server or in memory. Multer provides various options for configuring how files are stored and processed, making it a popular choice for handling file uploads in Node.js applications. -->
+        <!-- So we will use enctype="multipart/form-data" in our form for uploading files and then we will use multer middleware to parse that multipart/form-data and then we will store that file in some cloud storage like Cloudinary and then we will store the URL of that image in our database. -->
+        <!-- So now this form will not send the data in urlencoded format, but in multipart/form-data format -->
+        <form method="POST" action="/listings/<%=listing._id%>?_method=PUT"  novalidate   class="needs-validation"  enctype="multipart/form-data">
+            <!-- novalidate → This disables the browser’s built-in HTML5 validation (like checking required, pattern, etc.). Instead, you can handle validation yourself — either with custom JavaScript on the client side or with server-side validation in Express/Mongoose. -->
+            <!-- class="needs-validation" → This is a Bootstrap utility class. It’s often used with Bootstrap’s custom validation styles. When combined with JavaScript, it lets you apply Bootstrap’s visual feedback (like red borders or error messages) after checking the form. -->
+            <!-- Here to use this novalidate etc, we also need to write the JS code available for this in bootstrap website here. -->
+
+
+            <!-- Here we will make use of bootstrap here -->
+            <div class="mb-3">   <!-- here we are using this 'mb-3' bootstrap class gives margin from bottom -->
+                <label for="title"  class="form-label">Title</label>
+                <input type="text" name="listing[title]" value="<%= listing.title %>"  class="form-control"  id="title"  required> 
+                <!-- The 'required' attribute is a client-side validation rule. It means: The browser will not allow the form to be submitted if this field is left empty.The user must enter some value in the input box before the form can be submitted. -->
+                <!-- If they try to submit without filling it, the browser shows a validation message (like “Please fill out this field” in case of chrome browser as this message depends on browser if we just use 'required').This happens entirely on the client side — no request is sent to the server until the requirement is satisfied. -->
+                <!-- Now if we want some fixed response message, then we will make use bootstrap styling here along with required. -->
+
+                <!-- Here now this "listing[title]" means that this 'listing' is a object & in this we have one (key: value) pair & in that its key is actually this 'title' & the value which we input will became the value for this key -->
+                <!-- Here, The value attribute sets the default text that appears inside the input box when the page loads.If the user doesn’t change it, that value will be submitted with the form.If the user edits it, the new text replaces the default when the form is submitted. -->
+
+                <div class="valid-feedback">Title looks good</div>
+                <!-- valid-feedback is a Bootstrap class.It defines the message that will be shown when the associated input field is valid (passes validation). -->
+            </div>
+            <div class="mb-3">
+                <label for="description"  class="form-label">Description</label>
+                <!-- Here this will not show the existing description because in textarea value="" doesn't works -->
+                <!-- <textarea type="text" name="listing[description]" value="<%= listing.description %>"></textarea> -->
+                <!-- So we will use this actually here :- -->
+                <textarea type="text" name="listing[description]"  class="form-control"  id="description"  required><%= listing.description %></textarea>
+                <!-- Here now this "listing[description]" means that this 'listing' is a object & in this we have one (key: value) pair & its key is actually this 'description' & the value which we input will became the value for this key -->
+
+                <div class="invalid-feedback">Please enter a short description</div>
+            </div>
+
+            <div class="mb-3">
+                Original Listing Image <br>
+                <img src="<%= originalImageUrl %>">
+            </div>
+
+            <div class="mb-3">
+                <label for="image"  class="form-label">Upload New Image</label>
+                <input type="file"  name="listing[image]"  class="form-control"  id="image" >
+                <!-- here during editing of listing, it is not compulsory to upload the new image, that's why we are not using 'required' here  -->
+                <!-- Here now this "listing[image]" means that this 'listing' is a object & in this we have one (key: value) pair & its key is actually this 'image' & the value which we input will became the value for this key -->
+
+                <div class="invalid-feedback">Please enter a valid Link for Image</div>
+            </div>
+            <div class="mb-3">
+                <label for="price"  class="form-label">Price</label>
+                <input type="number" value="<%= listing.price %>" name="listing[price]"  class="form-control"  id="price"  required> 
+
+                <div class="invalid-feedback">Price should be valid</div>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col-md-4">
+                    <label for="country"  class="form-label">Country</label>
+                    <input type="text" value="<%= listing.country %>" name="listing[country]"  class="form-control"  id="country"  required> 
+
+                    <div class="invalid-feedback">Country name should be valid</div>
+                </div>
+                <div class="mb-3 col-md-8">
+                    <label for="location"  class="form-label">Location</label>
+                    <input type="text" value="<%= listing.location %>" name="listing[location]"  class="form-control"  id="location"  required> 
+
+                    <div class="invalid-feedback">Location should be valid</div>
+                </div>
+            </div>
+
+            <button class="btn btn-dark edit-btn mt-3">Edit</button>
+            <br> <br>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,181 @@
+<!-- Here this is a new view or template which is used to show all the data of some specific listing -->
+
+<!-- Here we are making use of Ejs-Mate layouts, so here we are actually extending & inplementing the boilerplate.ejs code here -->
+
+<%# It tells EJS-mate: “Use the layout file located at /views/layouts/boilerplate.ejs as the base template for this page.” %>
+<%# Everything written after that <h3>Listing Details : </h3> tag line becomes the child content that will be injected into the layout’s i.e boilerplate body placeholder. %>
+<% layout("/layouts/boilerplate") %>     <%# It is an EJS-mate directive. %>
+
+<script>
+    const mapToken = "<%= process.env.MAP_TOKEN %>";
+    const listing = <%- JSON.stringify(listing) %>;
+    // here this JSON.stringify() method is used to convert the JavaScript object (listing.geometry.coordinates) into a JSON string, so that we can easily pass this data from our server side code to client side code in the form of string, and then we can parse this string back to JavaScript object in our map.js file to use these coordinates for showing the location of listing on the map.
+</script>
+<!-- Now as this script tag is written here firstly, so it will get executed first -->
+<!-- So due to this, the mapToken will be available globally for use in the map initialization script -->
+<!-- SO now if we create a JS file in public/js folder, we can use this mapToken variable there because it's defined in the global scope -->
+
+
+<div class="row mt-3">
+    <div class="col-8 offset-3">    <%# here this 'offset-2' will adds a left margin equivalent to 2 columns. %>
+        <h3><%= listing.title %></h3>
+    </div>
+    
+    <!-- Here we will make use of bootstrap here -->
+    <div class="card col-6 offset-3 mt-2 show-card listing-card">
+        <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="listing_image">
+        <div class="card-body">
+            <p class="card-text">Owned by <i><%= listing.owner.username %></i> </p>
+            <p class="card-text"> <%= listing.description %> </p>
+            <p class="card-text"> 
+                <!-- here this '&#8377;' is actually tp show rupee symbol in HTML -->
+                &#8377; <%= listing.price.toLocaleString("en-IN") %>
+            </p>
+            <p class="card-text"> <%= listing.location %> </p>
+            <p class="card-text"> <%= listing.country %> </p>  
+        </div>
+    </div>
+
+    <br>
+
+    <!-- Here this 'currentUser' is the variable which we have defined to store the value of req.user in it, so that we can easily access this currentUser variable in our ejs files without passing it in the render method of each route, so that we can easily access the details of currently logged in user in our ejs files using this currentUser variable. -->
+    <!-- Now as 'currentUser' is local variable & defined inside a middleware, so in case that middleware not runs, then this currentUser will not get defined, so we must need to check whether this currentUser exists or not firstly -->
+    <!-- Here currentUser._id actually refers to the _id of the currently logged in user & listing.owner refers to the _id of the owner of the current listing & this .equals() method is used to compare these two _id values -->
+    <% if(currentUser && currentUser._id.equals(listing.owner._id)) { %>
+        <div class="btns">
+            <!-- Here it will give error because we are using colon (:) here, But colon is only required in backend part but here this is a link i.e URL i.e frontend part, so no need of colon here -->
+            <!-- <a href="http://localhost:8080/listings/:<%=listing._id%>"></a> -->
+            <!-- Now this is correct way -->
+            <!-- This uses the full absolute URL (http://localhost:8080/...). It will always point to your local server running on port 8080, regardless of where the link is clicked. -->
+            <!-- Useful if you’re testing locally and want to be explicit, but not ideal once you deploy (because localhost:8080 won’t exist for real users). -->
+            <!-- <li><a href="http://localhost:8080/listings/<%=listing._id%>"><%= listing.title %></a></li> -->
+            <!-- ------------OR-------------- -->
+            <!-- This uses a relative path. It assumes our app is running on the same domain and port, so it just appends /listings/<id> to the current host. -->
+            <!-- This is the preferred way in Express/EJS apps, because it works both locally and in production (e.g., on Heroku, Vercel, or any server). -->
+            <a href="/listings/<%=listing._id%>/edit"  class="btn btn-dark col-1 offset-3 edit-btn">Edit</a>
+
+            <br>
+
+            <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">    
+                <button class="btn btn-dark offset-5">Delete</button>
+            </form>
+        </div>
+    <% } %>
+
+    <!-- Now we can create a form to take the review for each listings & we can create that form inside 'show.ejs' file as then it became easier to know that the review created is for what listing. -->
+    <div class="col-8 offset-3  mb-3">
+        <!-- Here this currentUser is the variable we defined in our middleware to store the currently logged-in user -->
+        <% if(currentUser) { %>
+            <hr>
+            <h4>Leave a Review</h4>
+            <!-- Here we will make use of bootstrap here -->
+            <!-- Here we will send the POST request to this '/listings/:id/reviews' route actually & not to '/reviews' route because we want that along with review storing, each review must also store for which listing it gets created. -->
+            <!-- So here we will store review inside this particular id listing -->
+            <!-- So here we will also send the id of the listing in the route , so that we can easily know for which listing this review is created. -->
+            <!-- For custom Bootstrap form validation messages, you’ll need to add the novalidate boolean attribute to your <form>. This disables the browser default feedback tooltips, but still provides access to the form validation APIs in JavaScript. Try to submit the form below; our JavaScript will intercept the submit button and relay feedback to you. When attempting to submit, you’ll see the :invalid and :valid styles applied to your form controls. -->
+            <form method="POST"  action="/listings/<%=listing._id %>/reviews"  novalidate  class="needs-validation">
+                <!-- novalidate → This disables the browser’s built-in HTML5 validation (like checking required, pattern, etc.). Instead, you can handle validation yourself — either with custom JavaScript on the client side or with server-side validation in Express/Mongoose. -->
+                <!-- class="needs-validation" → This is a Bootstrap utility class. It’s often used with Bootstrap’s custom validation styles. When combined with JavaScript, it lets you apply Bootstrap’s visual feedback (like red borders or error messages) after checking the form. -->
+                <!-- Here to use this novalidate etc, we also need to write the JS code available for this in bootstrap website here. -->
+
+                <!-- So here we are using this way i.e review[rating] for the name for these tags, so that we can easily access them in app.js from the req.body -->
+                <!-- So it means that we are creating a review object here in which key is 'rating' here -->
+                <div class="mb-3 mt-3">
+                    <label for="rating"  class="form-label">Rating</label>
+                    <!-- Here we are using a custom star rating component & this code is already available on github 'LunarLogic Starability' account -->
+                    <fieldset class="starability-growRotate">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                    </fieldset>
+                </div>
+
+
+                <div class="mb-3 mt-3">
+                    <label for="comment" class="form-label">Comments</label>
+                    <textarea  class="form-control"  name="review[comment]"  id="comment"  cols="30"  rows="5"  placeholder="Write your comment here..."   required></textarea>
+                    <!-- The 'required' attribute is a client-side validation rule. It means: The browser will not allow the form to be submitted if this field is left empty.The user must enter some value in the input box before the form can be submitted. -->
+                    <!-- If they try to submit without filling it, the browser shows a validation message (like “Please fill out this field” in case of chrome browser as this message depends on browser if we just use 'required').This happens entirely on the client side — no request is sent to the server until the requirement is satisfied. -->
+                    <!-- Now if we want some fixed response message, then we will make use bootstrap styling here along with required. -->
+
+                    <div class="invalid-feedback">Please add some comments for review</div>
+                    <!-- The class invalid-feedback tells Bootstrap: “Show this message when the associated input field is invalid.” It’s linked to the input element just above it (for example, a Comment field). -->
+                    <!-- When the form is submitted and the field fails validation (empty, wrong format, etc.), Bootstrap will display this message in red below the input. If the field passes validation, this message stays hidden. -->
+                </div>
+
+                <button  class="btn btn-outline-dark">Submit</button>
+                <!-- So when we submit this form, it must add this review document into the review collection in database -->
+            </form>
+
+        <% } %>
+
+        <% if(listing.reviews.length > 0) { %>
+        <hr>
+        <div class="row">
+            <!-- Now we will show all the already existing reviews here for this current listing -->
+            <p><b>All Reviews</b></p>
+            
+            <% for(let review of listing.reviews) { %>
+                <!-- Now for each reviews, we will show that in the form of card -->
+                <!-- And for that we will make use fo bootstrap card -->
+                <div class="card col-5 ms-3 mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@<%= review.author.username %></h5>
+                        <p class="starability-result  card-text" data-rating="<%= review.rating %>"></p>                    
+                        <p class="card-text"><%= review.comment %></p>
+                    </div>
+                    <br>
+                    <form class="mb-3" method="POST" action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE">    
+                        <!-- btn-sm → Modifies the button to be small in size. -->
+                        <button class="btn btn-sm btn-dark">Delete</button>
+                    </form>
+                </div>
+            <% } %>
+        </div>
+        <% } %>
+        <hr>
+    </div>
+
+    <div class="col-8 offset-3 mb-3">
+        <h3>Where you'll be</h3>
+        <div id="map"></div>
+    </div>
+</div>
+
+<script src="/js/map.js"></script>
+<!-- Here this map.js file is the file in which we have written the code for initializing the map, so that we can show the map in the show.ejs file. -->
+
+
+<!-- toLocaleString() fn  :- -->
+<!-- 
+The toLocaleString() function is a JavaScript method used to convert numbers, dates, or other objects into a string that’s formatted according to the user’s locale (language + region settings).
+On Numbers: Formats numbers with commas, decimals, or currency symbols depending on locale.
+On Dates: Formats dates and times according to local conventions (e.g., MM/DD/YYYY vs DD/MM/YYYY).
+e.g let num = 1234567.89;
+console.log(num.toLocaleString("en-US")); 
+// "1,234,567.89" (US style)
+console.log(num.toLocaleString("de-DE")); 
+// "1.234.567,89" (German style)
+console.log(num.toLocaleString("en-IN")); 
+// "12,34,567.89" (Indian style)
+-->
+
+
+<!-- Here these, .form-label and .form-control are Bootstrap classes. -->
+<!-- .form-label → Used on <label> elements to apply Bootstrap’s consistent spacing, font size, and alignment. -->
+<!-- .form-control → Used on <input>, <textarea>, and <select> elements to give them Bootstrap’s styled look: full width, padding, borders, and responsive behavior. -->
+
+
+<!-- Here client-side validation is done using bootstrap validation here
+But for server side validation, we need to do this:-
+1. create Joi schema
+2. create a Schema validate fn
+3. And then pass this fn as middleware to the app.post() method for reviews -->

@@ -1,0 +1,18 @@
+<!-- Here this is a new view or template which is used to show errors in good manner-->
+
+<!-- Here we will make use of bootstrap actually -->
+
+<!-- Here we are making use of Ejs-Mate layouts, so here we are actually extending & inplementing the boilerplate.ejs code here -->
+
+<%# It tells EJS-mate: “Use the layout file located at /views/layouts/boilerplate.ejs as the base template for this page.” %>
+<%# Everything written after this line becomes the child content that will be injected into the layout’s i.e boilerplate body placeholder. %>
+<% layout("/layouts/boilerplate") %>     <%# It is an EJS-mate directive. %>
+
+<div class="row mt-3">
+    <div class="alert alert-danger col-6 offset-3" role="alert">
+        <p class="alert-heading"> <%= err.message %> </p>
+        <!-- But generally we don't show the whole stack trace of error as that became difficult to understand. -->
+        <!-- <p> <%= err.stack %></p>   -->
+        <!-- here it will give the stack trace of the error -->
+    </div>
+</div>

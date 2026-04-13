@@ -1,0 +1,63 @@
+<!-- Here this is the base code that we will extend & use in other ejs files. -->
+<!-- boilerplate means that code which exists already & which we use everywhere -->
+
+<!-- Here we want that each & every page of our website must looks like this boilerplate only. -->
+<%# Here this is an EJS comment format %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayNest</title>
+    <link rel="stylesheet" href="/css/style.css"/>    <!-- SO here no need to write this '/public/css/style.css' because ejs can directly access all the files present inside public, so no need to write public here -->
+    <!-- So here public folder will serve all the files, & then ejs can directly access all the files directly -->
+
+    <!-- Here we are including this link, so that we can use the bootstrap styling here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <!-- Here we are including this link, so that we can use the font-awesome icons here -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Here these links are used to import google fonts & to use them -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet"  href="/css/rating.css" >
+
+    <!-- They are used for Mapbox -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.20.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.20.0/mapbox-gl.js"></script>
+</head>
+<body>
+    <%# Here we are using 'inludes' for creating the subtemplates here %>
+    <%# Here we will use this ejs tag i.e < %- % > It Outputs the unescaped value into the template i.e it will no return the HTML code as string which < %= % > ejs tag actually does but it directly returns the complete html code itself & not the html string. %>
+    <%# Here we firstly need to move out of this 'layouts' folder, that's why we use .. here & then we need to move into 'includes' folder %>
+    <%- include("../includes/navbar.ejs") %> 
+
+    <!-- Here What body Represents :- -->
+    <!-- body is a special placeholder variable provided by EJS‑mate when you use layouts. -->
+    <!-- It doesn’t come from your own code — it’s automatically injected by EJS‑mate. -->
+    <!-- When you declare in a child template: -->
+    <!-- < % layout("/layouts/boilerplate") %> -->
+    <!-- <h3>Listing Details</h3> -->
+    <!-- Then, everything after that line (<h3>Listing Details</h3>) becomes the child content. -->
+    <!-- That child content is passed into the layout and rendered wherever you put < %- body %>. -->
+    <div class="container">
+        <%- include("../includes/flash.ejs") %> 
+
+        <%# Here this is an EJS-mate directive. %>
+        <%- body %>     <%# Child template content goes here %>  
+        <%# When you use layouts with EJS-mate, the child template’s content gets injected into the layout wherever you place this above line i.e < %- body % >. %>
+        <%# The < %- % > tag means the content is inserted unescaped, so any HTML in the child template will render as actual HTML, not as plain text. %>
+    </div>
+
+    <!-- Here it will incude all the code written inside footer.ejs here-->
+    <%- include("../includes/footer.ejs") %>
+
+    <!-- Here we are including this link, so that we can use the bootstrap JS here -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <script src="/js/script.js"></script>  <!-- SO here no need to write this '/public/js/script.css' because ejs can directly access all the files present inside public, so no need to write public here -->
+    <!-- So here public folder will serve all the files, & then ejs can directly access all the files directly -->
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!-- Here this is a login view or template which is used to login for some already exisiting user -->
+
+<!-- Here we are making use of Ejs-Mate layouts, so here we are actually extending & inplementing the boilerplate.ejs code here -->
+
+<%# It tells EJS-mate: “Use the layout file located at /views/layouts/boilerplate.ejs as the base template for this page.” %>
+<%# Everything written after that <div class="row"> tag line becomes the child content that will be injected into the layout’s i.e boilerplate body placeholder. %>
+<% layout("/layouts/boilerplate") %>     <%# It is an EJS-mate directive. %>
+<div class="row mt-3">
+    <h1 class="col-6 offset-3">Login on StayNest</h1>
+    <div class="col-6 offset-3">    <%# here this 'offset-3' will adds a left margin equivalent to 2 columns. %>
+        <!-- Here it will send a POST request to this /login route actually -->
+        <!-- For custom Bootstrap form validation messages, you’ll need to add the novalidate boolean attribute to your <form>. This disables the browser default feedback tooltips, but still provides access to the form validation APIs in JavaScript. Try to submit the form below; our JavaScript will intercept the submit button and relay feedback to you. When attempting to submit, you’ll see the :invalid and :valid styles applied to your form controls. -->
+        <form method="POST" action="/login"  novalidate  class="needs-validation">
+            <!-- novalidate → This disables the browser’s built-in HTML5 validation (like checking required, pattern, etc.). Instead, you can handle validation yourself — either with custom JavaScript on the client side or with server-side validation in Express/Mongoose. -->
+            <!-- class="needs-validation" → This is a Bootstrap utility class. It’s often used with Bootstrap’s custom validation styles. When combined with JavaScript, it lets you apply Bootstrap’s visual feedback (like red borders or error messages) after checking the form. -->
+            <!-- Here to use this novalidate etc, we also need to write the JS code available for this in bootstrap website here. -->
+            
+            <!-- Here we will make use of bootstrap here -->
+            <div class="mb-3">   <!-- here we are using this 'mb-3' bootstrap class gives margin from bottom -->
+                <label for="username"  class="form-label">Username</label>
+                <input type="text"  name="username"  class="form-control"  id="username"  required> 
+                <!-- The 'required' attribute is a client-side validation rule. It means: The browser will not allow the form to be submitted if this field is left empty.The user must enter some value in the input box before the form can be submitted. -->
+                <!-- If they try to submit without filling it, the browser shows a validation message (like “Please fill out this field” in case of chrome browser as this message depends on browser if we just use 'required').This happens entirely on the client side — no request is sent to the server until the requirement is satisfied. -->
+                <!-- Now if we want some fixed response message, then we will make use bootstrap styling here along with required. -->
+            </div>
+
+            <div class="mb-3">   <!-- here we are using this 'mb-3' bootstrap class gives margin from bottom -->
+                <label for="password"  class="form-label">Password</label>
+                <input type="password"  name="password"  class="form-control"  id="password"  required> 
+                <!-- The 'required' attribute is a client-side validation rule. It means: The browser will not allow the form to be submitted if this field is left empty.The user must enter some value in the input box before the form can be submitted. -->
+                <!-- If they try to submit without filling it, the browser shows a validation message (like “Please fill out this field” in case of chrome browser as this message depends on browser if we just use 'required').This happens entirely on the client side — no request is sent to the server until the requirement is satisfied. -->
+                <!-- Now if we want some fixed response message, then we will make use bootstrap styling here along with required. -->
+            </div>
+        
+        
+            <button class="btn btn-success mt-3">Login</button>
+            <br> <br>
+        </form>
+    </div>
+</div>
+
+<!-- So here we are using this way i.e listing[key] for the name for these tags, so that we can easily access them in app.js from the req.body -->
+
+<!-- Here these, .form-label and .form-control are Bootstrap classes. -->
+<!-- .form-label → Used on <label> elements to apply Bootstrap’s consistent spacing, font size, and alignment. -->
+<!-- .form-control → Used on <input>, <textarea>, and <select> elements to give them Bootstrap’s styled look: full width, padding, borders, and responsive behavior. -->
+
+    

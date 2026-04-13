@@ -1,0 +1,91 @@
+<!-- Here this is a new view or template which is used to insert a new listing-->
+
+<!-- Here we are making use of Ejs-Mate layouts, so here we are actually extending & inplementing the boilerplate.ejs code here -->
+
+<%# It tells EJS-mate: “Use the layout file located at /views/layouts/boilerplate.ejs as the base template for this page.” %>
+<%# Everything written after that <div class="row"> tag line becomes the child content that will be injected into the layout’s i.e boilerplate body placeholder. %>
+<% layout("/layouts/boilerplate") %>     <%# It is an EJS-mate directive. %>
+<div class="row mt-3">
+    <div class="col-8 offset-2">    <%# here this 'offset-2' will adds a left margin equivalent to 2 columns. %>
+        <h3>Create a New Listing</h3>
+        <br>
+        <!-- Here it will send a POST request to this /listings route actually -->
+        <!-- For custom Bootstrap form validation messages, you’ll need to add the novalidate boolean attribute to your <form>. This disables the browser default feedback tooltips, but still provides access to the form validation APIs in JavaScript. Try to submit the form below; our JavaScript will intercept the submit button and relay feedback to you. When attempting to submit, you’ll see the :invalid and :valid styles applied to your form controls. -->
+        
+
+        <!-- Here currentyl, our form can only parse the urlencoded data, so we need to use some middleware to parse the multipart/form-data which is used for file uploads. So we will use multer for that. It is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files. It makes it easy to handle file uploads in your Express applications by parsing incoming form data and storing the uploaded files in a specified location on your server or in memory. Multer provides various options for configuring how files are stored and processed, making it a popular choice for handling file uploads in Node.js applications. -->
+        <!-- So we will use enctype="multipart/form-data" in our form for uploading files and then we will use multer middleware to parse that multipart/form-data and then we will store that file in some cloud storage like Cloudinary and then we will store the URL of that image in our database. -->
+        <!-- So now this form will not send the data in urlencoded format, but in multipart/form-data format -->
+        <form method="POST" action="/listings"  novalidate  class="needs-validation"  enctype="multipart/form-data">
+            <!-- novalidate → This disables the browser’s built-in HTML5 validation (like checking required, pattern, etc.). Instead, you can handle validation yourself — either with custom JavaScript on the client side or with server-side validation in Express/Mongoose. -->
+            <!-- class="needs-validation" → This is a Bootstrap utility class. It’s often used with Bootstrap’s custom validation styles. When combined with JavaScript, it lets you apply Bootstrap’s visual feedback (like red borders or error messages) after checking the form. -->
+            <!-- Here to use this novalidate etc, we also need to write the JS code available for this in bootstrap website here. -->
+
+            <!-- Here we are giving them the same name that we actually gave them in backend actually -->
+            
+            <!-- Here we will make use of bootstrap here -->
+            <div class="mb-3">   <!-- here we are using this 'mb-3' bootstrap class gives margin from bottom -->
+                <label for="title"  class="form-label">Title</label>
+                <input type="text" placeholder="Add a catchy title" name="listing[title]"  class="form-control"  id="title"  required> 
+                <!-- The 'required' attribute is a client-side validation rule. It means: The browser will not allow the form to be submitted if this field is left empty.The user must enter some value in the input box before the form can be submitted. -->
+                <!-- If they try to submit without filling it, the browser shows a validation message (like “Please fill out this field” in case of chrome browser as this message depends on browser if we just use 'required').This happens entirely on the client side — no request is sent to the server until the requirement is satisfied. -->
+                <!-- Now if we want some fixed response message, then we will make use bootstrap styling here along with required. -->
+
+                <!-- Here now this "listing[title]" means that this 'listing' is a object & in this we have one (key: value) pair & in that its key is actually this 'title' & the value which we input will became the value for this key -->
+                
+                <div class="valid-feedback">Title looks good</div>
+                <!-- valid-feedback is a Bootstrap class.It defines the message that will be shown when the associated input field is valid (passes validation). -->
+            </div>
+        
+            <div class="mb-3">
+                <label for="description"  class="form-label">Description</label>
+                <textarea type="text" name="listing[description]" placeholder="enter description"  class="form-control"  id="description"  required></textarea>
+                <!-- Here now this "listing[description]" means that this 'listing' is a object & in this we have one (key: value) pair & its key is actually this 'description' & the value which we input will became the value for this key -->
+
+                <div class="invalid-feedback">Please enter a short description</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="image"  class="form-label">Upload Listing Image</label>
+                <input type="file"  name="listing[image]"  class="form-control"  id="image"  required> 
+                <!-- Here now this "listing[image]" means that this 'listing' is a object & in this we have one (key: value) pair & its key is actually this 'image' & the value which we input will became the value for this key -->
+            </div>
+    
+            <div class="mb-3">
+                <label for="price"  class="form-label">Price</label>
+                <input type="number" placeholder="1200" name="listing[price]"  class="form-control"  id="price"  required> 
+
+                <div class="invalid-feedback">Price should be valid</div>
+                <!-- The class invalid-feedback tells Bootstrap: “Show this message when the associated input field is invalid.” It’s linked to the input element just above it (for example, a price field). -->
+                <!-- When the form is submitted and the field fails validation (empty, wrong format, etc.), Bootstrap will display this message in red below the input. If the field passes validation, this message stays hidden. -->
+            </div>
+        
+            <div class="row">
+                <div class="mb-3 col-md-4">
+                    <label for="country"  class="form-label">Country</label>
+                    <input type="text" placeholder="India" name="listing[country]"  class="form-control"  id="country"  required> 
+
+                    <div class="invalid-feedback">Country name should be valid</div>
+                </div>
+        
+                <div class="mb-3 col-md-8">
+                    <label for="location"  class="form-label">Location</label>
+                    <input type="text" placeholder="Bengaluru, Karnataka" name="listing[location]"  class="form-control"  id="location"  required> 
+
+                    <div class="invalid-feedback">Location should be valid</div>
+                </div>
+            </div>
+        
+            <button class="btn btn-dark add-btn mt-3">Add</button>
+            <br> <br>
+        </form>
+    </div>
+</div>
+
+<!-- So here we are using this way i.e listing[key] for the name for these tags, so that we can easily access them in app.js from the req.body -->
+
+<!-- Here these, .form-label and .form-control are Bootstrap classes. -->
+<!-- .form-label → Used on <label> elements to apply Bootstrap’s consistent spacing, font size, and alignment. -->
+<!-- .form-control → Used on <input>, <textarea>, and <select> elements to give them Bootstrap’s styled look: full width, padding, borders, and responsive behavior. -->
+
+    
